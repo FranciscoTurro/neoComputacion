@@ -1,0 +1,36 @@
+﻿@model neoComputacion.ViewModel.PostVM
+
+@{
+    ViewData["Title"] = "Create post";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-sm-4">
+        <form asp-action="CreatePost" asp-asp-controller="Home" method="post" enctype="multipart/form-data">
+            <input type="hidden" asp-for="oPost.Id" />
+
+            <div class="mb-2">
+                <label class="form-label" asp-for="oPost.Title">Title</label>
+                <input type="text" class="form-control form-control-sm" asp-for="oPost.Title" />
+            </div>
+            <div class="mb-2">
+
+                <label class="form-label" asp-for="PhotoPath">Foto</label>
+                <input type="file" class="form-control" asp-for="PhotoPath" />
+            </div>
+            <div class="mb-2">
+                <label class="form-label" asp-for="oPost.Content">Content</label>
+                <input type="text" class="form-control" asp-for="oPost.Content" />
+            </div>
+
+            <div class="mb-2">
+
+                <button class="btn btn-primary" type="submit">Crear</button>
+
+                <a class="btn btn-info" asp-action="Index" asp-controller="Home">Volver</a>
+
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,16 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using neoComputacion.Models;
+using neoComputacion.ViewModel;
 using System.Diagnostics;
 
 namespace neoComputacion.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly NeoCompDbContext _context;
+        private readonly IWebHostEnvironment webHostEnvironment;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(NeoCompDbContext context, IWebHostEnvironment webHostEnvironment)
         {
-            _logger = logger;
+            _context = context;
+            this.webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()
@@ -18,10 +21,50 @@ namespace neoComputacion.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        [HttpGet]
+        public IActionResult CreatePost()
         {
             return View();
         }
+
+        [HttpPost]
+        public IActionResult CreatePost(PostVM postModel)
+        {
+            string fileName = UploadFile(postModel);
+
+            Post post = new Post()
+            {
+                Id = postModel.oPost.Id,
+                Title = postModel.oPost.Title,
+                Image = fileName,
+                Content = postModel.oPost.Content,
+            };
+
+            _context.Posts.Add(post);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index", "Home");
+
+        }
+
+        private string UploadFile(PostVM postModel)
+        {
+            string fileName = null;
+            if (postModel.PhotoPath != null)
+            {
+                string uploadDir = Path.Combine(webHostEnvironment.WebRootPath, "images");
+                fileName = Guid.NewGuid().ToString() + "-" + postModel.PhotoPath.FileName;
+                string fileRoute = Path.Combine(uploadDir, fileName);
+
+                using (var fileStream = new FileStream(fileRoute, FileMode.Create))
+                {
+                    postModel.PhotoPath.CopyTo(fileStream);
+                }
+            }
+
+            return fileName;
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
