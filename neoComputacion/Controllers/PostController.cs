@@ -17,20 +17,6 @@ namespace neoComputacion.Controllers
 
         }
 
-        public IActionResult Index()
-        {
-            List<Post> postsList = _context.Posts.ToList();
-            List<Post> postsListToSend = postsList.Select(post => new Post
-            {
-                Id = post.Id,
-                Title = post.Title,
-                Image = post.Image,
-                Content = truncateString(post.Content)
-            }).ToList();
-
-            return View(postsListToSend);
-        }
-
         [HttpGet]
         public IActionResult CreatePost()
         {
@@ -81,6 +67,7 @@ namespace neoComputacion.Controllers
             return post;
         }
 
+        [HttpGet]
         public IActionResult DeletePost(int id)
         {
             Post post = getOnePost(id);
@@ -88,20 +75,68 @@ namespace neoComputacion.Controllers
             _context.Posts.Remove(post);
             _context.SaveChanges();
 
-            return RedirectToAction("Index", "Post");
+            return RedirectToAction("Index", "Home");
 
         }
 
-        public string truncateString(string input)
+        [HttpGet]
+        public IActionResult DetailPost(int id)
         {
-            if (input.Length <= 50)
+            Post post = getOnePost(id);
+
+            return View(post);
+        }
+
+        [HttpGet]
+        public IActionResult EditPost(int id)
+        {
+            Post post = getOnePost(id);
+
+            if (post == null)
             {
-                return input;
+                return NotFound();
             }
-            else
+
+            PostVM postVM = new PostVM
             {
-                return input.Substring(0, 50) + "...";
+                oPost = post
+            };
+
+            return View(postVM);
+        }
+
+
+        [HttpPost]
+        public IActionResult EditPost(PostVM postModel)
+        {
+            string fileName = UploadFile(postModel);
+
+            Post existingPost = _context.Posts.Find(postModel.oPost.Id);
+
+            if (existingPost == null)
+            {
+                return NotFound();
+            }//ya se que el posteo existe pero necesito traer el post original para editarlo
+
+            if (postModel.oPost.Title != null)
+            {
+                existingPost.Title = postModel.oPost.Title;
             }
+
+            if (fileName != null)
+            {
+                existingPost.Image = fileName;
+            }
+
+            if (postModel.oPost.Content != null)
+            {
+                existingPost.Content = postModel.oPost.Content;
+            }
+
+            _context.Posts.Update(existingPost);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index", "Home");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

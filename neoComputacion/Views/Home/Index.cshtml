@@ -2,8 +2,20 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@model List<neoComputacion.Models.Post>
+
+<div class="d-flex">
+    @foreach (var post in Model)
+    {
+        <div class="card" style="width: 18rem;">
+            <a asp-controller="Post" asp-action="DetailPost" asp-route-id=@post.Id>
+                <img class="card-img-top" src="~/images/@post.Image" alt="@post.Title image">
+            </a>
+            <div class="card-body">
+                <h5 class="card-title">@post.Title</h5>
+                <p class="card-text">@post.Content</p>
+            </div>
+        </div>
+    }
 </div>
-    
+<a class="btn btn-primary" asp-action="CreatePost" asp-controller="Post">Create post</a>

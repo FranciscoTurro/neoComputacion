@@ -1,0 +1,11 @@
+﻿@model neoComputacion.Models.Post
+
+@{
+    ViewData["Title"] = "Detailed post";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Model.Content
+
+<a asp-controller="Post" asp-action="EditPost" asp-route-id=@Model.Id class="btn btn-warning">Edit</a>
+<a asp-controller="Post" asp-action="DeletePost" asp-route-id=@Model.Id class="btn btn-danger">Delete</a>
