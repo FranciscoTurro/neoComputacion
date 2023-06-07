@@ -19,7 +19,16 @@ namespace neoComputacion.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            List<Post> postsList = _context.Posts.ToList();
+            List<Post> postsListToSend = postsList.Select(post => new Post
+            {
+                Id = post.Id,
+                Title = post.Title,
+                Image = post.Image,
+                Content = truncateString(post.Content)
+            }).ToList();
+
+            return View(postsListToSend);
         }
 
         [HttpGet]
@@ -62,8 +71,37 @@ namespace neoComputacion.Controllers
                     postModel.PhotoPath.CopyTo(fileStream);
                 }
             }
-
             return fileName;
+        }
+
+        private Post getOnePost(int id)
+        {
+            Post post = _context.Posts.Find(id);
+
+            return post;
+        }
+
+        public IActionResult DeletePost(int id)
+        {
+            Post post = getOnePost(id);
+
+            _context.Posts.Remove(post);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index", "Post");
+
+        }
+
+        public string truncateString(string input)
+        {
+            if (input.Length <= 50)
+            {
+                return input;
+            }
+            else
+            {
+                return input.Substring(0, 50) + "...";
+            }
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
