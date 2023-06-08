@@ -4,7 +4,7 @@
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
 # cosas especificas al proyecto
-/images/postImages/
+/neoComputacion/wwwroot/images/postImages
 
 
 # User-specific files
