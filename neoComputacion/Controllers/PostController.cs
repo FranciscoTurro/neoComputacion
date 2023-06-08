@@ -47,7 +47,7 @@ namespace neoComputacion.Controllers
             string fileName = null;
             if (postModel.PhotoPath != null)
             {
-                string uploadDir = Path.Combine(webHostEnvironment.WebRootPath, "images");
+                string uploadDir = Path.Combine(webHostEnvironment.WebRootPath, "images/postImages");
                 fileName = Guid.NewGuid().ToString() + "-" + postModel.PhotoPath.FileName;
                 string fileRoute = Path.Combine(uploadDir, fileName);
 

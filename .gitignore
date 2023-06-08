@@ -3,6 +3,10 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# cosas especificas al proyecto
+/images/postImages/
+
+
 # User-specific files
 *.rsuser
 *.suo
