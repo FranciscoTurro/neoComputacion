@@ -4,18 +4,30 @@
 
 @model List<neoComputacion.Models.Post>
 
-<div class="d-flex">
-    @foreach (var post in Model)
-    {
-        <div class="card" style="width:18rem;">
-            <a asp-controller="Post" asp-action="DetailPost" asp-route-id=@post.Id>
-                <img class="card-img-top" src="~/images/@post.Image" alt="@post.Title image">
-            </a>
-            <div class="card-body">
-                <h5 class="card-title">@post.Title</h5>
-                <p class="card-text">@post.Content</p>
-            </div>
-        </div>
+<style>
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
     }
+</style>
+
+<div class="container">
+    <div class="row">
+        @foreach (var post in Model)
+        {
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <a asp-controller="Post" asp-action="DetailPost" asp-route-id="@post.Id">
+                        <img class="card-img-top" src="~/images/@post.Image" alt="@post.Title image">
+                    </a>
+                    <div class="card-body">
+                        <h3 class="card-title">@post.Title</h3>
+                        <p class="card-text">@post.Content</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>
+
 <a class="btn btn-primary" asp-action="CreatePost" asp-controller="Post">Create post</a>

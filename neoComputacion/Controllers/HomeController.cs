@@ -29,13 +29,15 @@ namespace neoComputacion.Controllers
 
         public string truncateString(string input)
         {
-            if (input.Length <= 50)
+            int NUMBER_OF_LETTERS = 70;
+
+            if (input.Length <= NUMBER_OF_LETTERS)
             {
                 return input;
             }
             else
             {
-                return input.Substring(0, 50) + "...";
+                return input.Substring(0, NUMBER_OF_LETTERS) + "...";
             }
         }
 
