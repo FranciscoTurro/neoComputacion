@@ -19,7 +19,7 @@ namespace neoComputacion.Controllers
             int pagesCount = (int)Math.Ceiling((double)postsCount / postsPerPage);
 
             List<Post> postsList = _context.Posts
-                .OrderByDescending(post => post.Id)  // uso el id para determinar cual post es el mas nuevo (no estoy del todo seguro si es la solucion ideal)
+                .OrderByDescending(post => post.CreationDate)
                 .Skip((page - 1) * postsPerPage)
                 .Take(postsPerPage)
                 .ToList();
