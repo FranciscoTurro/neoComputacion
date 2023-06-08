@@ -12,9 +12,18 @@ namespace neoComputacion.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int page = 1, int postsPerPage = 8)
         {
-            List<Post> postsList = _context.Posts.ToList();
+            int postsCount = _context.Posts.Count();
+
+            int pagesCount = (int)Math.Ceiling((double)postsCount / postsPerPage);
+
+            List<Post> postsList = _context.Posts
+                .OrderByDescending(post => post.Id)  // uso el id para determinar cual post es el mas nuevo (no estoy del todo seguro si es la solucion ideal)
+                .Skip((page - 1) * postsPerPage)
+                .Take(postsPerPage)
+                .ToList();
+
             List<Post> postsListToSend = postsList.Select(post => new Post
             {
                 Id = post.Id,
@@ -23,21 +32,32 @@ namespace neoComputacion.Controllers
                 Content = truncateString(post.Content)
             }).ToList();
 
-            return View(postsListToSend);
+            // creo un objeto de paginacion, que tiene la lista de posteos para mostrar 
+            //y informacion necesaria para poder navegar entre paginas
+            var paginationViewModel = new PaginationVM<Post>
+            {
+                Posts = postsListToSend,
+                PageNumber = page,
+                PageSize = postsPerPage,
+                TotalItems = postsCount,
+                TotalPages = pagesCount
+            };
+
+            return View(paginationViewModel);
         }
 
 
         public string truncateString(string input)
         {
-            int NUMBER_OF_LETTERS = 70;
+            int numberOfLetters = 70;
 
-            if (input.Length <= NUMBER_OF_LETTERS)
+            if (input.Length <= numberOfLetters)
             {
                 return input;
             }
             else
             {
-                return input.Substring(0, NUMBER_OF_LETTERS) + "...";
+                return input.Substring(0, numberOfLetters) + "...";
             }
         }
 

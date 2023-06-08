@@ -1,8 +1,4 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
-
-@model List<neoComputacion.Models.Post>
+﻿@model PaginationVM<neoComputacion.Models.Post>
 
 <style>
     .card-img-top {
@@ -13,7 +9,7 @@
 
 <div class="container">
     <div class="row">
-        @foreach (var post in Model)
+        @foreach (var post in Model.Posts)
         {
             <div class="col-md-6 mb-4">
                 <div class="card">
@@ -28,6 +24,31 @@
             </div>
         }
     </div>
+
+    <nav>
+        <ul class="pagination justify-content-center">
+            @if (Model.PageNumber > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="?page=@(Model.PageNumber - 1)">Previous</a>
+                </li>
+            }
+
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                    <a class="page-link" href="?page=@i">@i</a>
+                </li>
+            }
+
+            @if (Model.PageNumber < Model.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="?page=@(Model.PageNumber + 1)">Next</a>
+                </li>
+            }
+        </ul>
+    </nav>
 </div>
 
 <a class="btn btn-primary" asp-action="CreatePost" asp-controller="Post">Create post</a>
