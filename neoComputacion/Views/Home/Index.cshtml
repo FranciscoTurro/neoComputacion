@@ -7,7 +7,7 @@
 <div class="d-flex">
     @foreach (var post in Model)
     {
-        <div class="card" style="width: 18rem;">
+        <div class="card" style="width:18rem;">
             <a asp-controller="Post" asp-action="DetailPost" asp-route-id=@post.Id>
                 <img class="card-img-top" src="~/images/@post.Image" alt="@post.Title image">
             </a>

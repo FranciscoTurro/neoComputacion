@@ -35,7 +35,6 @@ namespace neoComputacion.Controllers
                 Image = fileName,
                 Content = postModel.oPost.Content,
             };
-
             _context.Posts.Add(post);
             _context.SaveChanges();
 
