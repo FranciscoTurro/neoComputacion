@@ -5,7 +5,18 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@Model.Content
-
-<a asp-controller="Post" asp-action="EditPost" asp-route-id=@Model.Id class="btn btn-warning">Edit</a>
-<a asp-controller="Post" asp-action="DeletePost" asp-route-id=@Model.Id class="btn btn-danger">Delete</a>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2 d-flex flex-column align-items-center">
+            <h1 class="text-center mb-4 font-weight-bold">@Model.Title</h1>
+            <img src="~/images/@Model.Image" alt="Article Image" class="img-fluid mb-4" style="max-width: 919px; height: auto;" />
+            <div class="article-content">
+                <p style="font-size:18px;" class="text-left">@Model.Content</p>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex flex-row align-items-center mt-4 gap-2 justify-content-end">
+        <a asp-controller="Post" asp-action="EditPost" asp-route-id="@Model.Id" class="btn btn-warning mr-2">Edit</a>
+        <a asp-controller="Post" asp-action="DeletePost" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+    </div>
+</div>

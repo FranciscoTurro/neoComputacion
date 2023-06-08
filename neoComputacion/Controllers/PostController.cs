@@ -83,6 +83,11 @@ namespace neoComputacion.Controllers
         {
             Post post = getOnePost(id);
 
+            if (post == null)
+            {
+                return NotFound();
+            }
+
             return View(post);
         }
 
