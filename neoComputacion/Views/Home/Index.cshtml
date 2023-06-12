@@ -27,7 +27,7 @@
 
     <nav>
         <ul class="pagination justify-content-center">
-            @if (Model.PageNumber > 1)
+            @if (Model.HasPreviousPage)
             {
                 <li class="page-item">
                     <a class="page-link" href="?page=@(Model.PageNumber - 1)">Previous</a>
@@ -41,7 +41,7 @@
                 </li>
             }
 
-            @if (Model.PageNumber < Model.TotalPages)
+            @if (Model.HasNextPage)
             {
                 <li class="page-item">
                     <a class="page-link" href="?page=@(Model.PageNumber + 1)">Next</a>

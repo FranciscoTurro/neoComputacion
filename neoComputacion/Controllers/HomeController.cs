@@ -39,7 +39,6 @@ namespace neoComputacion.Controllers
                 Posts = postsListToSend,
                 PageNumber = page,
                 PageSize = postsPerPage,
-                TotalItems = postsCount,
                 TotalPages = pagesCount
             };
 
