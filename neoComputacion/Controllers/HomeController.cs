@@ -45,7 +45,6 @@ namespace neoComputacion.Controllers
             return View(paginationViewModel);
         }
 
-
         public string truncateString(string input)
         {
             int numberOfLetters = 70;
