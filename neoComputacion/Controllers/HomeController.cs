@@ -24,39 +24,17 @@ namespace neoComputacion.Controllers
                 .Take(postsPerPage)
                 .ToList();
 
-            List<Post> postsListToSend = postsList.Select(post => new Post
-            {
-                Id = post.Id,
-                Title = post.Title,
-                Image = post.Image,
-                Content = truncateString(post.Content)
-            }).ToList();
-
             // creo un objeto de paginacion, que tiene la lista de posteos para mostrar 
             //y informacion necesaria para poder navegar entre paginas
             var paginationViewModel = new PaginationVM<Post>
             {
-                Posts = postsListToSend,
+                Posts = postsList,
                 PageNumber = page,
                 PageSize = postsPerPage,
                 TotalPages = pagesCount
             };
 
             return View(paginationViewModel);
-        }
-
-        public string truncateString(string input)
-        {
-            int numberOfLetters = 70;
-
-            if (input.Length <= numberOfLetters)
-            {
-                return input;
-            }
-            else
-            {
-                return input.Substring(0, numberOfLetters) + "...";
-            }
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

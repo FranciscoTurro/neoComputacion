@@ -84,9 +84,7 @@ namespace neoComputacion.Controllers
             Post post = getOnePost(id);
 
             if (post == null)
-            {
                 return NotFound();
-            }
 
             return View(post);
         }
@@ -97,9 +95,7 @@ namespace neoComputacion.Controllers
             Post post = getOnePost(id);
 
             if (post == null)
-            {
                 return NotFound();
-            }
 
             PostVM postVM = new PostVM
             {
@@ -118,24 +114,17 @@ namespace neoComputacion.Controllers
             Post existingPost = _context.Posts.Find(postModel.oPost.Id);
 
             if (existingPost == null)
-            {
                 return NotFound();
-            }//ya se que el posteo existe pero necesito traer el post original para editarlo
+            //ya se que el posteo existe pero necesito traer el post original para editarlo
 
             if (postModel.oPost.Title != null)
-            {
                 existingPost.Title = postModel.oPost.Title;
-            }
 
             if (fileName != null)
-            {
                 existingPost.Image = fileName;
-            }
 
             if (postModel.oPost.Content != null)
-            {
                 existingPost.Content = postModel.oPost.Content;
-            }
 
             _context.Posts.Update(existingPost);
             _context.SaveChanges();

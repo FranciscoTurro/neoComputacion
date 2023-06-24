@@ -12,6 +12,32 @@
     }
 </style>
 
+@functions {
+    public string GetTimeAgo(DateTime creationDate)
+    {
+        TimeSpan timeDifference = DateTime.Now - creationDate;
+
+        if (timeDifference.TotalMinutes < 60)
+            return $"{(int)timeDifference.TotalMinutes} minutes ago";
+        else if (timeDifference.TotalHours < 24)
+            return $"{(int)timeDifference.TotalHours} hours ago";
+        else if (timeDifference.TotalDays < 7)
+            return $"{(int)timeDifference.TotalDays} days ago";
+        else
+            return $"{(int)(timeDifference.TotalDays / 7)} weeks ago";
+    }
+
+    public string truncateString(string input)
+    {
+        int numberOfLetters = 70;
+
+        if (input.Length <= numberOfLetters)
+            return input;
+        else
+            return input.Substring(0, numberOfLetters) + "...";
+    }
+}
+
 <div class="container">
     <div class="row">
         @foreach (var post in Model.Posts)
@@ -23,7 +49,12 @@
                     </a>
                     <div class="card-body">
                         <h3 class="card-title">@post.Title</h3>
-                        <p class="card-text">@post.Content</p>
+                        <p class="card-text">@truncateString(@post.Content)</p>
+                        <p class="card-text">
+                            <small class="text-muted" style="text-align: right; display: block;">
+                                @GetTimeAgo(@post.CreationDate)
+                            </small>
+                        </p>
                     </div>
                 </div>
             </div>

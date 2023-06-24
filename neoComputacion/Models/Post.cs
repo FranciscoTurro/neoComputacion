@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace neoComputacion.Models;
+﻿namespace neoComputacion.Models;
 
 public partial class Post
 {
