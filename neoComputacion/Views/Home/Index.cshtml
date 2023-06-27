@@ -3,6 +3,16 @@
 @{
     ViewData["Title"] = "Home";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    List<string> badgeColors = new List<string>
+    {
+        "bg-primary",
+        "bg-success",
+        "bg-danger",
+        "bg-warning",
+        "bg-info",
+        "bg-dark",
+        "bg-secondary"
+    };
 }
 
 <style>
@@ -38,37 +48,37 @@
     }
 }
 
-<div class="container">
-    <div class="row">
-        @foreach (var post in Model.Posts)
-        {
-            <div class="col-md-6 mb-4">
-                <div class="card">
-                    <a asp-controller="Post" asp-action="DetailPost" asp-route-id="@post.Id">
-                        <img class="card-img-top" src="~/images/postImages/@post.Image" alt="@post.Title image">
-                    </a>
-                    <div class="card-body">
-                        <h3 class="card-title">@post.Title</h3>
-                        <p class="card-text">@truncateString(@post.Content)</p>
-                        <p class="card-text d-flex justify-content-between">
-                            <small>
-                                Categories:
-                                @foreach (var category in post.Categories)
-                                {
-                                    <span class="text-capitalize badge bg-primary">@category.Name</span>
-                                }
-                            </small>
-                            <small class="text-muted" style="text-align: right; display: block;">
-                                @GetTimeAgo(@post.CreationDate)
-                            </small>
-                        </p>
+<div>
+    <div class="container">
+        <div class="row">
+            @foreach (var post in Model.Posts)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <a asp-controller="Post" asp-action="DetailPost" asp-route-id="@post.Id">
+                            <img class="card-img-top" src="~/images/postImages/@post.Image" alt="@post.Title image">
+                        </a>
+                        <div class="card-body">
+                            <h3 class="card-title">@post.Title</h3>
+                            <p class="card-text">@truncateString(@post.Content)</p>
+                            <p class="card-text d-flex justify-content-between">
+                                <small>
+                                    Categories:
+                                    @foreach (var category in post.Categories)
+                                    {
+                                        <span class="text-capitalize badge @(badgeColors[category.Id % badgeColors.Count])">@category.Name</span>
+                                    }
+                                </small>
+                                <small class="text-muted" style="text-align: right; display: block;">
+                                    @GetTimeAgo(@post.CreationDate)
+                                </small>
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
     </div>
-</div>
-
 
     <nav>
         <ul class="pagination justify-content-center">

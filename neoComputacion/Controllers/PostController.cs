@@ -78,10 +78,13 @@ namespace neoComputacion.Controllers
 
         private Post getOnePost(int id)
         {
-            Post post = _context.Posts.Find(id);
+            Post post = _context.Posts
+                .Include(p => p.Categories)
+                .FirstOrDefault(p => p.Id == id);
 
             return post;
         }
+
 
         [HttpGet]
         public IActionResult DeletePost(int id)
