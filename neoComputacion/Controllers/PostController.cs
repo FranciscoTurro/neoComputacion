@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using neoComputacion.Models;
 using neoComputacion.ViewModel;
 using System.Diagnostics;
@@ -20,12 +21,17 @@ namespace neoComputacion.Controllers
         [HttpGet]
         public IActionResult CreatePost()
         {
+            var categories = _context.Categories.ToList();
+            ViewBag.Categories = categories;
             return View();
         }
 
         [HttpPost]
-        public IActionResult CreatePost(PostVM postModel)
+        public IActionResult CreatePost(PostVM postModel, string[] categories)
         {
+            if (categories == null || categories.Length == 0)
+                categories = new[] { "4" }; // categoria por default si el usuario no elige, PC
+
             string fileName = UploadFile(postModel);
 
             Post post = new Post()
@@ -34,7 +40,18 @@ namespace neoComputacion.Controllers
                 Title = postModel.oPost.Title,
                 Image = fileName,
                 Content = postModel.oPost.Content,
+                Categories = new List<Category>()
             };
+
+            foreach (var categoryId in categories)
+            {
+                var category = _context.Categories.Find(Int32.Parse(categoryId));
+                if (category != null)
+                {
+                    post.Categories.Add(category);
+                }
+            }
+
             _context.Posts.Add(post);
             _context.SaveChanges();
 
@@ -71,11 +88,22 @@ namespace neoComputacion.Controllers
         {
             Post post = getOnePost(id);
 
+            if (post == null)
+                return NotFound();
+
+            // tengo que borrar manualmente las entradas en la tabla intermedia, hay una opcion en el
+            //entity framework para borrar en cascada, pero no estaba funcionando correctamente
+
+            var postCategories = _context.Entry(post).Collection(p => p.Categories).Query().ToList();
+            foreach (var category in postCategories)
+            {
+                post.Categories.Remove(category);
+            }
+
             _context.Posts.Remove(post);
             _context.SaveChanges();
 
             return RedirectToAction("Index", "Home");
-
         }
 
         [HttpGet]
@@ -102,35 +130,48 @@ namespace neoComputacion.Controllers
                 oPost = post
             };
 
+            var categories = _context.Categories.ToList();
+            ViewBag.Categories = categories;
+
             return View(postVM);
         }
 
 
         [HttpPost]
-        public IActionResult EditPost(PostVM postModel)
+        public IActionResult EditPost(PostVM postModel, string[] categories)
         {
             string fileName = UploadFile(postModel);
 
-            Post existingPost = _context.Posts.Find(postModel.oPost.Id);
+            Post existingPost = _context.Posts.Include(p => p.Categories).FirstOrDefault(p => p.Id == postModel.oPost.Id);
 
             if (existingPost == null)
                 return NotFound();
-            //ya se que el posteo existe pero necesito traer el post original para editarlo
 
-            if (postModel.oPost.Title != null)
-                existingPost.Title = postModel.oPost.Title;
+            existingPost.Title = postModel.oPost.Title;
+            existingPost.Content = postModel.oPost.Content;
+
+            if (categories != null && categories.Length > 0)
+            {
+                existingPost.Categories.Clear();
+
+                foreach (var categoryId in categories)
+                {
+                    var category = _context.Categories.Find(Int32.Parse(categoryId));
+                    if (category != null)
+                    {
+                        existingPost.Categories.Add(category);
+                    }
+                }
+            }
 
             if (fileName != null)
                 existingPost.Image = fileName;
 
-            if (postModel.oPost.Content != null)
-                existingPost.Content = postModel.oPost.Content;
-
-            _context.Posts.Update(existingPost);
             _context.SaveChanges();
 
             return RedirectToAction("Index", "Home");
         }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

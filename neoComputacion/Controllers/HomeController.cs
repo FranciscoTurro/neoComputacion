@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using neoComputacion.Models;
 using System.Diagnostics;
 
@@ -18,7 +19,7 @@ namespace neoComputacion.Controllers
 
             int pagesCount = (int)Math.Ceiling((double)postsCount / postsPerPage);
 
-            List<Post> postsList = _context.Posts
+            List<Post> postsList = _context.Posts.Include(p => p.Categories)
                 .OrderByDescending(post => post.CreationDate)
                 .Skip((page - 1) * postsPerPage)
                 .Take(postsPerPage)

@@ -50,7 +50,14 @@
                     <div class="card-body">
                         <h3 class="card-title">@post.Title</h3>
                         <p class="card-text">@truncateString(@post.Content)</p>
-                        <p class="card-text">
+                        <p class="card-text d-flex justify-content-between">
+                            <small>
+                                Categories:
+                                @foreach (var category in post.Categories)
+                                {
+                                    <span class="text-capitalize badge bg-primary">@category.Name</span>
+                                }
+                            </small>
                             <small class="text-muted" style="text-align: right; display: block;">
                                 @GetTimeAgo(@post.CreationDate)
                             </small>
@@ -60,6 +67,8 @@
             </div>
         }
     </div>
+</div>
+
 
     <nav>
         <ul class="pagination justify-content-center">

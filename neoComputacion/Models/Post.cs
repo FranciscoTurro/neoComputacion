@@ -1,4 +1,7 @@
-﻿namespace neoComputacion.Models;
+﻿using System;
+using System.Collections.Generic;
+
+namespace neoComputacion.Models;
 
 public partial class Post
 {
@@ -11,4 +14,6 @@ public partial class Post
     public string Content { get; set; } = null!;
 
     public DateTime CreationDate { get; set; }
+
+    public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
 }
