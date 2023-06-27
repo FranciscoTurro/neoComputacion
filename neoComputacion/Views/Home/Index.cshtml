@@ -51,57 +51,79 @@
 <div>
     <div class="container">
         <div class="row">
-            @foreach (var post in Model.Posts)
-            {
-                <div class="col-md-6 mb-4">
-                    <div class="card">
-                        <a asp-controller="Post" asp-action="DetailPost" asp-route-id="@post.Id">
-                            <img class="card-img-top" src="~/images/postImages/@post.Image" alt="@post.Title image">
-                        </a>
-                        <div class="card-body">
-                            <h3 class="card-title">@post.Title</h3>
-                            <p class="card-text">@truncateString(@post.Content)</p>
-                            <p class="card-text d-flex justify-content-between">
-                                <small>
-                                    Categories:
-                                    @foreach (var category in post.Categories)
-                                    {
-                                        <span class="text-capitalize badge @(badgeColors[category.Id % badgeColors.Count])">@category.Name</span>
-                                    }
-                                </small>
-                                <small class="text-muted" style="text-align: right; display: block;">
-                                    @GetTimeAgo(@post.CreationDate)
-                                </small>
-                            </p>
+            <div class="col-md-12 mb-4">
+                <form method="get" action="@Url.Action("Index")">
+                    <div class="form-row">
+                        <div class="col">
+                            <select name="categoryId" class="form-control">
+                                <option value="">All Categories</option>
+                                @foreach (var category in ViewBag.Categories)
+                                {
+                                    <option value="@category.Id">@category.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col my-2">
+                            <button type="submit" class="btn btn-primary">Filter</button>
                         </div>
                     </div>
-                </div>
-            }
+                </form>
+            </div>
         </div>
+        <div class="container">
+            <div class="row">
+                @foreach (var post in Model.Posts)
+                {
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <a asp-controller="Post" asp-action="DetailPost" asp-route-id="@post.Id">
+                                <img class="card-img-top" src="~/images/postImages/@post.Image" alt="@post.Title image">
+                            </a>
+                            <div class="card-body">
+                                <h3 class="card-title">@post.Title</h3>
+                                <p class="card-text">@truncateString(@post.Content)</p>
+                                <p class="card-text d-flex justify-content-between">
+                                    <small>
+                                        Categories:
+                                        @foreach (var category in post.Categories)
+                                        {
+                                            <span class="text-capitalize badge @(badgeColors[category.Id % badgeColors.Count])">@category.Name</span>
+                                        }
+                                    </small>
+                                    <small class="text-muted" style="text-align: right; display: block;">
+                                        @GetTimeAgo(@post.CreationDate)
+                                    </small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <nav>
+            <ul class="pagination justify-content-center">
+                @if (Model.HasPreviousPage)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="?page=@(Model.PageNumber - 1)">Previous</a>
+                    </li>
+                }
+
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                        <a class="page-link" href="?page=@i">@i</a>
+                    </li>
+                }
+
+                @if (Model.HasNextPage)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="?page=@(Model.PageNumber + 1)">Next</a>
+                    </li>
+                }
+            </ul>
+        </nav>
     </div>
-
-    <nav>
-        <ul class="pagination justify-content-center">
-            @if (Model.HasPreviousPage)
-            {
-                <li class="page-item">
-                    <a class="page-link" href="?page=@(Model.PageNumber - 1)">Previous</a>
-                </li>
-            }
-
-            @for (int i = 1; i <= Model.TotalPages; i++)
-            {
-                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
-                    <a class="page-link" href="?page=@i">@i</a>
-                </li>
-            }
-
-            @if (Model.HasNextPage)
-            {
-                <li class="page-item">
-                    <a class="page-link" href="?page=@(Model.PageNumber + 1)">Next</a>
-                </li>
-            }
-        </ul>
-    </nav>
 </div>

@@ -13,20 +13,24 @@ namespace neoComputacion.Controllers
             _context = context;
         }
 
-        public IActionResult Index(int page = 1, int postsPerPage = 8)
+        public IActionResult Index(int page = 1, int postsPerPage = 8, int? categoryId = null)
         {
-            int postsCount = _context.Posts.Count();
+            IQueryable<Post> query = _context.Posts.Include(p => p.Categories)
+                .OrderByDescending(post => post.CreationDate);
 
+            if (categoryId.HasValue)
+            {
+                query = query.Where(post => post.Categories.Any(category => category.Id == categoryId));
+            }
+
+            int postsCount = query.Count();
             int pagesCount = (int)Math.Ceiling((double)postsCount / postsPerPage);
 
-            List<Post> postsList = _context.Posts.Include(p => p.Categories)
-                .OrderByDescending(post => post.CreationDate)
+            List<Post> postsList = query
                 .Skip((page - 1) * postsPerPage)
                 .Take(postsPerPage)
                 .ToList();
 
-            // creo un objeto de paginacion, que tiene la lista de posteos para mostrar 
-            //y informacion necesaria para poder navegar entre paginas
             var paginationViewModel = new PaginationVM<Post>
             {
                 Posts = postsList,
@@ -35,8 +39,11 @@ namespace neoComputacion.Controllers
                 TotalPages = pagesCount
             };
 
+            ViewBag.Categories = _context.Categories.ToList();
+
             return View(paginationViewModel);
         }
+
 
         public IActionResult AboutUs()
         {
