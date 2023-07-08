@@ -45,7 +45,7 @@ namespace neoComputacion.Controllers
 
             foreach (var categoryId in categories)
             {
-                //por cada una de las categorias elegidas por el usuario se agregar
+                //por cada una de las categorias elegidas por el usuario se agregan
                 //a las categorias de este posteo. entity framework las agrega a
                 //la tabla intermedia PostsCategory (creo)
                 var category = _context.Categories.Find(Int32.Parse(categoryId));

@@ -46,6 +46,16 @@
         else
             return input.Substring(0, numberOfLetters) + "...";
     }
+
+    public string truncateTitle(string input)
+    {
+        int numberOfLetters = 35;
+
+        if (input.Length <= numberOfLetters)
+            return input;
+        else
+            return input.Substring(0, numberOfLetters) + "...";
+    }
 }
 
 <div>
@@ -80,7 +90,7 @@
                                 <img class="card-img-top" src="~/images/postImages/@post.Image" alt="@post.Title image">
                             </a>
                             <div class="card-body">
-                                <h3 class="card-title">@post.Title</h3>
+                                <h3 class="card-title">@truncateTitle(@post.Title)</h3>
                                 <p class="card-text">@truncateString(@post.Content)</p>
                                 <p class="card-text d-flex justify-content-between">
                                     <small>
